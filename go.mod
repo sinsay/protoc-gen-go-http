@@ -1,4 +1,4 @@
-module github.com/go-kratos/kratos/cmd/protoc-gen-go-http/v2
+module github.com/sinsay/protoc-gen-go-http
 
 go 1.19
 
