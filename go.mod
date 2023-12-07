@@ -1,4 +1,4 @@
-module github.com/sinsay/protoc-gen-go-http
+module github.com/sinsay/protoc-gen-go-http-fx
 
 go 1.19
 
