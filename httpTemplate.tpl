@@ -20,7 +20,7 @@ func (*Register{{.ServiceType}}HTTPResult) String() string {
     return "{{.ServiceType}}HTTPServer"
 }
 
-func Register{{.ServiceType}}HTTPServerProvider(newer interface{}) []interface{} {
+func Register{{.ServiceType}}ServerHTTPProvider(newer interface{}) []interface{} {
 	return []interface{}{
 		// For provide dependency
 		fx.Annotate(
@@ -85,7 +85,34 @@ type {{.ServiceType}}HTTPClient interface {
 {{- range .MethodSets}}
 	{{.Name}}(ctx context.Context, req *{{.Request}}, opts ...http.CallOption) (rsp *{{.Reply}}, err error)
 {{- end}}
+	RegisterNameForDiscover() string
+
 }
+
+func register{{.ServiceType}}ClientHTTPNameProvider() []string {
+	return []string{"{{.RegistryName}}", "http"}
+}
+
+func Register{{.ServiceType}}ClientHTTPProvider(creator interface{}) []interface{} {
+	return []interface{}{
+		fx.Annotate(
+			New{{.ServiceType}}HTTPClient,
+			fx.As(new({{.ServiceType}}HTTPClient)),
+			fx.ParamTags(`name:"{{.RegistryName}}/http"`),
+		),
+		fx.Annotate(
+			creator,
+			// fx.As(new(*http.Client)),
+			fx.ParamTags(`name:"{{.RegistryName}}/http/name"`),
+			fx.ResultTags(`name:"{{.RegistryName}}/http"`),
+		),
+		fx.Annotate(
+			register{{.ServiceType}}ClientHTTPNameProvider,
+			fx.ResultTags(`name:"{{.RegistryName}}/http/name"`),
+		),
+	}
+}
+
 
 type {{.ServiceType}}HTTPClientImpl struct{
 	cc *http.Client
@@ -94,6 +121,11 @@ type {{.ServiceType}}HTTPClientImpl struct{
 func New{{.ServiceType}}HTTPClient (client *http.Client) {{.ServiceType}}HTTPClient {
 	return &{{.ServiceType}}HTTPClientImpl{client}
 }
+
+func (c *{{$svrType}}HTTPClientImpl) RegisterNameForDiscover() string {
+    return "{{.RegistryName}}"
+}
+
 
 {{range .MethodSets}}
 func (c *{{$svrType}}HTTPClientImpl) {{.Name}}(ctx context.Context, in *{{.Request}}, opts ...http.CallOption) (*{{.Reply}}, error) {

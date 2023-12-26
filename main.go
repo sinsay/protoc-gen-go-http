@@ -20,6 +20,18 @@ func main() {
 		fmt.Printf("protoc-gen-go-http %v\n", release)
 		return
 	}
+
+	//// load test file
+	//tempFile, err := os.OpenFile("./test/test.data", os.O_RDONLY, 0766)
+	//if err != nil {
+	//	fmt.Println("load test file failed:", err)
+	//	return
+	//}
+	//defer func() { _ = tempFile.Close() }()
+	//
+	////replace test file as stdin
+	//os.Stdin = tempFile
+
 	protogen.Options{
 		ParamFunc: flag.CommandLine.Set,
 	}.Run(func(gen *protogen.Plugin) error {
