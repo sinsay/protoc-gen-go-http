@@ -98,17 +98,17 @@ func Register{{.ServiceType}}ClientHTTPProvider(creator interface{}) []interface
 		fx.Annotate(
 			New{{.ServiceType}}HTTPClient,
 			fx.As(new({{.ServiceType}}HTTPClient)),
-			fx.ParamTags(`name:"{{.RegistryName}}/http"`),
+			fx.ParamTags(`name:"{{.RegistryName}}/http/{{.ServiceShortName}}"`),
 		),
 		fx.Annotate(
 			creator,
 			// fx.As(new(*http.Client)),
-			fx.ParamTags(`name:"{{.RegistryName}}/http/name"`),
-			fx.ResultTags(`name:"{{.RegistryName}}/http"`),
+			fx.ParamTags(`name:"{{.RegistryName}}/http/name/{{.ServiceShortName}}"`),
+			fx.ResultTags(`name:"{{.RegistryName}}/http/{{.ServiceShortName}}"`),
 		),
 		fx.Annotate(
 			register{{.ServiceType}}ClientHTTPNameProvider,
-			fx.ResultTags(`name:"{{.RegistryName}}/http/name"`),
+			fx.ResultTags(`name:"{{.RegistryName}}/http/name/{{.ServiceShortName}}"`),
 		),
 	}
 }

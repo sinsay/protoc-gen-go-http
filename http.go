@@ -76,10 +76,11 @@ func genService(p *protogen.Plugin, file *protogen.File, g *protogen.GeneratedFi
 	registryName := getRegistryName(p, service)
 	// HTTP Server.
 	sd := &serviceDesc{
-		RegistryName: registryName,
-		ServiceType:  service.GoName,
-		ServiceName:  string(service.Desc.FullName()),
-		Metadata:     file.Desc.Path(),
+		RegistryName:     registryName,
+		ServiceType:      service.GoName,
+		ServiceName:      string(service.Desc.FullName()),
+		ServiceShortName: unexport(service.GoName),
+		Metadata:         file.Desc.Path(),
 	}
 	for _, method := range service.Methods {
 		if method.Desc.IsStreamingClient() || method.Desc.IsStreamingServer() {
